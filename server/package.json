@@ -6,8 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
-    "start": "node dist/app.js",
-    "dev": "tsx watch src/app.ts"
+    "start": "tsx src/app.ts",
+    "dev": "tsx watch src/app.ts",
+    "db:init": "tsx scripts/init-db.ts"
   },
   "keywords": [],
   "author": "",
