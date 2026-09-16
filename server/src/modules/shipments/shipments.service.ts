@@ -12,6 +12,8 @@ import { ShipmentRepository } from "./shipments.repo";
 import { mapShipmentPaginatedResult } from "./shipments.mapper";
 import { withTransaction } from "../../db/db";
 import { PoolClient } from "pg";
+import { ShipmentEventRepository } from "../events/events.repo";
+import { ShipmentEvent } from "../events/events.types";
 
 export class ShipmentService {
   private static generateTrackingNumber(): string {
@@ -44,15 +46,15 @@ export class ShipmentService {
         client,
       );
 
-      //   await ShipmentEventRepository.create(
-      //     {
-      //       shipment_id: shipment.id,
-      //       event_type: "CREATED",
-      //       location: dto.destination_address,
-      //       description: "Shipment order created",
-      //     },
-      //     client,
-      //   );
+      await ShipmentEventRepository.create(
+        {
+          shipment_id: shipment.id,
+          event_type: "CREATED",
+          location: dto.destination_address,
+          description: "Shipment order created",
+        },
+        client,
+      );
 
       return shipment;
     });
@@ -83,17 +85,28 @@ export class ShipmentService {
         throw new Error(`Failed to update shipment status.`);
       }
 
-      //   await ShipmentEventRepository.create(
-      //     {
-      //       shipment_id: Number(id),
-      //       event_type: dto.status,
-      //       location: dto.location,
-      //       description: dto.description || `Status changed to ${dto.status}`,
-      //     },
-      //     client
-      //   );
+      await ShipmentEventRepository.create(
+        {
+          shipment_id: id,
+          event_type: dto.status,
+          location: dto.location,
+          description: dto.description || `Status changed to ${dto.status}`,
+        },
+        client,
+      );
 
       return updatedShipment;
     });
+  }
+
+  static async getShipmentEvents(
+    shipmentId: number | string,
+  ): Promise<ShipmentEvent[]> {
+    const shipment = await ShipmentRepository.findById(shipmentId);
+    if (!shipment) {
+      throw new Error(`Shipment with ID ${shipmentId} not found.`);
+    }
+
+    return await ShipmentEventRepository.findByShipmentId(shipmentId);
   }
 }

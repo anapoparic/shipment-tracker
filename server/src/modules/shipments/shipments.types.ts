@@ -32,7 +32,7 @@ export interface CreateShipmentDto {
 
 export interface UpdateShipmentStatusDto {
   status: ShipmentStatus;
-  location?: string;
+  location: string;
   description?: string;
 }
 
