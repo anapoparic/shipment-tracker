@@ -1,0 +1,49 @@
+services:
+  postgres_db:
+    image: postgres:16-alpine
+    container_name: shipment_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: shipment_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d shipment_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  server:
+    build: ./server
+    container_name: shipment_server
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      DB_HOST: postgres_db
+      DB_PORT: 5432
+      DB_NAME: shipment_db
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      PORT: 3000
+      NODE_ENV: production
+    depends_on:
+      postgres_db:
+        condition: service_healthy
+    command: sh -c "npm run db:init && npm start"
+
+  client:
+    build: ./client
+    container_name: shipment_client
+    restart: always
+    ports:
+      - "4200:4200"
+    depends_on:
+      - server
+
+volumes:
+  pgdata:
