@@ -1,0 +1,134 @@
+<div class="dashboard-container">
+  <!-- Dinamičke kartice sa metrikama -->
+  <div class="metrics-grid">
+    <app-metric-card title="Active shipments" [value]="activeShipmentsCount">
+    </app-metric-card>
+
+    <app-metric-card
+      title="Late / on fire"
+      [value]="lateCount"
+      themeClass="danger"
+    >
+    </app-metric-card>
+
+    <app-metric-card
+      title="Delivered today"
+      [value]="deliveredTodayCount"
+      themeClass="success"
+    >
+    </app-metric-card>
+  </div>
+
+  <!-- Polje za pretragu i filteri -->
+  <div class="filters-bar">
+    <div class="search-box">
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="onSearchChange()"
+        placeholder="Pretraga po broju pošiljke ili kupcu"
+      />
+    </div>
+    <div class="filter-actions">
+      <div class="select-wrapper">
+        <select
+          class="status-select"
+          [(ngModel)]="selectedFilter"
+          (ngModelChange)="onFilterChange()"
+        >
+          <option value="all">All</option>
+          <option value="late">Late only</option>
+          <option value="CREATED">Created</option>
+          <option value="IN_TRANSIT">In transit</option>
+          <option value="OUT_FOR_DELIVERY">Out for delivery</option>
+          <option value="DELIVERED">Delivered</option>
+          <option value="CANCELLED">Cancelled</option>
+        </select>
+      </div>
+
+      <button class="btn-primary" (click)="isNewShipmentModalOpen = true">
+        + New shipment
+      </button>
+    </div>
+  </div>
+
+  <!-- Tabela sa podacima -->
+  <div class="table-responsive-wrapper">
+    <table class="shipments-table">
+      <thead>
+        <tr>
+          <th>Tracking</th>
+          <th>Customer</th>
+          <th>Status</th>
+          <th>Promised delivery</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let shipment of shipments"
+          (click)="openDetails(shipment)"
+          style="cursor: pointer"
+        >
+          <td class="fw-bold">{{ shipment.tracking_number }}</td>
+          <td>{{ shipment.customer_name || "Nepoznat kupac" }}</td>
+          <td>
+            <div class="status-cell">
+              <span>{{ formatStatus(shipment.current_status) }}</span>
+              <span *ngIf="shipment.is_late" class="badge-danger">
+                {{ formatDelay(shipment.delay_in_hours) }}
+              </span>
+            </div>
+          </td>
+          <td [ngClass]="{ 'text-danger': shipment.is_late }">
+            {{ shipment.promised_delivery_date | date: "dd MMM, HH:mm" }}
+          </td>
+          <td class="text-right arrow-col">&gt;</td>
+        </tr>
+        <tr *ngIf="shipments.length === 0">
+          <td
+            colspan="5"
+            style="text-align: center; color: var(--text-muted); padding: 30px"
+          >
+            Nema pronađenih pošiljaka.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Kontrole za paginaciju -->
+    <div class="pagination-container" *ngIf="totalPages > 1">
+      <button
+        class="page-btn"
+        [disabled]="currentPage === 1"
+        (click)="changePage(currentPage - 1)"
+      >
+        Previous
+      </button>
+      <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
+      <button
+        class="page-btn"
+        [disabled]="currentPage === totalPages"
+        (click)="changePage(currentPage + 1)"
+      >
+        Next
+      </button>
+    </div>
+  </div>
+
+  <!-- Detalji panel (Drawer) -->
+  <app-shipment-details
+    *ngIf="selectedShipment"
+    [shipment]="selectedShipment"
+    (closeDrawer)="closeDetails()"
+  >
+  </app-shipment-details>
+
+  <!-- Prikaz modala -->
+  <app-new-shipment
+    *ngIf="isNewShipmentModalOpen"
+    (close)="isNewShipmentModalOpen = false"
+    (shipmentCreated)="handleShipmentCreated($event)"
+  >
+  </app-new-shipment>
+</div>
