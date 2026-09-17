@@ -1,0 +1,166 @@
+<div class="drawer-backdrop" (click)="close()">
+  <div class="drawer-content" (click)="$event.stopPropagation()">
+    <!-- Panel header -->
+    <div class="drawer-header">
+      <div class="header-top">
+        <div class="title-group">
+          <h2>{{ shipment.tracking_number }}</h2>
+          <span class="status-badge">{{
+            formatStatus(shipment.current_status)
+          }}</span>
+          <span *ngIf="shipment.is_late" class="badge-danger">
+            {{ formatDelay(shipment.delay_in_hours) }}
+          </span>
+        </div>
+        <button class="close-btn" (click)="close()">&times;</button>
+      </div>
+      <p class="customer-subtitle">{{ shipment.customer_name }}</p>
+    </div>
+
+    <!-- Tabs navigation -->
+    <div class="tabs-nav">
+      <button
+        class="tab-btn"
+        [class.active]="activeTab === 'details'"
+        (click)="activeTab = 'details'"
+      >
+        Details
+      </button>
+      <button
+        class="tab-btn"
+        [class.active]="activeTab === 'timeline'"
+        (click)="switchTab('timeline')"
+      >
+        Timeline
+      </button>
+    </div>
+
+    <!-- Content for Details tab -->
+    <div class="drawer-body" *ngIf="activeTab === 'details'">
+      <div class="section-title">CUSTOMER</div>
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="label">Name</span>
+          <span class="value">{{ shipment.customer_name }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Phone</span>
+          <span class="value">{{ shipment.customer_phone || "-" }}</span>
+        </div>
+        <div class="info-item full-width">
+          <span class="label">Email</span>
+          <span class="value email-text">{{ shipment.customer_email }}</span>
+        </div>
+      </div>
+
+      <div class="section-title shipment-section-title">SHIPMENT</div>
+
+      <div
+        class="alert-banner"
+        [ngClass]="
+          (shipment.delay_in_hours || 0) > 0
+            ? 'late-alert-banner'
+            : 'success-alert-banner'
+        "
+      >
+        <span
+          [ngClass]="
+            (shipment.delay_in_hours || 0) > 0 ? 'red-dot' : 'green-dot'
+          "
+        ></span>
+        <span>
+          Isporuka kasni
+          <strong>{{ formatDelayDuration(shipment.delay_in_hours!) }}</strong> u
+          odnosu na obećani rok
+        </span>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-item full-width">
+          <span class="label">Destination address</span>
+          <span class="value">{{ shipment.destination_address }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Current status</span>
+          <span class="value">{{ formatStatus(shipment.current_status) }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Promised delivery</span>
+          <span class="value" [ngClass]="{ 'text-danger': shipment.is_late }">
+            {{ shipment.promised_delivery_date | date: "dd MMM, HH:mm" }}
+          </span>
+        </div>
+        <div class="info-item">
+          <span class="label">Created</span>
+          <span class="value">{{
+            shipment.created_at | date: "dd MMM, HH:mm"
+          }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Last updated</span>
+          <span class="value">{{
+            shipment.updated_at | date: "dd MMM, HH:mm"
+          }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content for Timeline tab -->
+    <div class="drawer-body timeline-body" *ngIf="activeTab === 'timeline'">
+      <div class="timeline-actions">
+        <button class="add-event-btn" (click)="openAddEventModal()">
+          + Add event
+        </button>
+      </div>
+
+      <div class="timeline-container">
+        <div
+          class="timeline-item"
+          *ngFor="let event of sortedEvents; let last = last"
+          [class.last-item]="last"
+        >
+          <div class="timeline-marker">
+            <div class="dot"></div>
+            <div class="line" *ngIf="!last"></div>
+          </div>
+
+          <div class="timeline-content">
+            <div class="timeline-row-top">
+              <span class="event-title">{{
+                formatStatus(event.event_type)
+              }}</span>
+              <span class="event-time">{{
+                event.timestamp | date: "dd MMM, HH:mm"
+              }}</span>
+            </div>
+            <div class="event-location">{{ event.location }}</div>
+            <div class="event-description" *ngIf="event.description">
+              {{ event.description }}
+            </div>
+          </div>
+        </div>
+
+        <div
+          *ngIf="!sortedEvents || sortedEvents.length === 0"
+          class="no-events"
+        >
+          Nema zabeleženih događaja za ovu pošiljku.
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer with IDs -->
+    <div class="drawer-footer">
+      <span>ID: {{ shipment.id }}</span>
+      <span>Customer ID: {{ shipment.customer_id }}</span>
+    </div>
+  </div>
+
+  <app-new-event
+    *ngIf="isAddEventModalOpen"
+    [shipmentId]="numericShipmentId"
+    (close)="isAddEventModalOpen = false"
+    (eventCreated)="handleEventCreated($event)"
+  >
+  </app-new-event>
+</div>

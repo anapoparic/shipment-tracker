@@ -1,0 +1,56 @@
+<app-modal title="Add event" (close)="onClose()">
+  <form [formGroup]="eventForm" (ngSubmit)="onSubmit()">
+    <!-- Event type -->
+    <div class="form-group">
+      <label>Event type *</label>
+      <select formControlName="event_type" class="form-control">
+        <option value="" disabled>Select type...</option>
+        <option *ngFor="let type of eventTypes" [value]="type">
+          {{ formatStatusText(type) }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Location -->
+    <div class="form-group">
+      <label>Location *</label>
+      <input
+        type="text"
+        formControlName="location"
+        placeholder="npr. Nis Hub - Shelf B-12"
+        class="form-control"
+      />
+    </div>
+
+    <!-- Timestamp -->
+    <div class="form-group">
+      <label>Timestamp *</label>
+      <input
+        type="datetime-local"
+        formControlName="timestamp"
+        class="form-control"
+      />
+    </div>
+
+    <!-- Description -->
+    <div class="form-group">
+      <label>Description</label>
+      <textarea
+        formControlName="description"
+        placeholder="Kratak opis šta se desilo..."
+        class="form-control textarea"
+        rows="3"
+      ></textarea>
+    </div>
+
+    <!-- Footer Buttons -->
+    <div class="modal-footer">
+      <button type="button" class="btn-cancel" (click)="onClose()">
+        Cancel
+      </button>
+      <button type="submit" class="btn-save" [disabled]="eventForm.invalid">
+        Save event
+      </button>
+    </div>
+  </form>
+</app-modal>

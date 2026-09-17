@@ -141,3 +141,20 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+
+# --- ADDED FOR THIS PROJECT ---
+
+# TypeScript / Node.js build output
+server/dist/
+dist/
+
+# Angular build & cache
+.angular/
+client/.angular/
+client/dist/
+
+# OS & Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

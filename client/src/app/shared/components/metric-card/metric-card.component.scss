@@ -1,0 +1,45 @@
+.metric-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+  min-width: 220px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  &.danger {
+    background-color: var(--bg-danger-card);
+    border-color: rgba(255, 77, 79, 0.3);
+  }
+
+  &.success {
+    background-color: var(--bg-success-card);
+    border-color: rgba(82, 196, 26, 0.3);
+  }
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.title {
+  font-size: 14px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.icon {
+  font-size: 16px;
+}
+
+.value {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text-main);
+}
