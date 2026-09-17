@@ -1,5 +1,5 @@
 <div class="dashboard-container">
-  <!-- Dinamičke kartice sa metrikama -->
+  <!-- Dynamic metric cards -->
   <div class="metrics-grid">
     <app-metric-card title="Active shipments" [value]="activeShipmentsCount">
     </app-metric-card>
@@ -19,7 +19,7 @@
     </app-metric-card>
   </div>
 
-  <!-- Polje za pretragu i filteri -->
+  <!-- Search and filter fields -->
   <div class="filters-bar">
     <div class="search-box">
       <input
@@ -52,7 +52,7 @@
     </div>
   </div>
 
-  <!-- Tabela sa podacima -->
+  <!-- Table -->
   <div class="table-responsive-wrapper">
     <table class="shipments-table">
       <thead>
@@ -96,7 +96,7 @@
       </tbody>
     </table>
 
-    <!-- Kontrole za paginaciju -->
+    <!-- Pagination -->
     <div class="pagination-container" *ngIf="totalPages > 1">
       <button
         class="page-btn"
@@ -116,7 +116,7 @@
     </div>
   </div>
 
-  <!-- Detalji panel (Drawer) -->
+  <!-- Shipment Details Drawer -->
   <app-shipment-details
     *ngIf="selectedShipment"
     [shipment]="selectedShipment"
@@ -124,7 +124,7 @@
   >
   </app-shipment-details>
 
-  <!-- Prikaz modala -->
+  <!-- New Shipment Modal -->
   <app-new-shipment
     *ngIf="isNewShipmentModalOpen"
     (close)="isNewShipmentModalOpen = false"

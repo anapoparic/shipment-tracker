@@ -1,12 +1,10 @@
 <div class="modal-backdrop">
   <div class="modal-container" (click)="$event.stopPropagation()">
-    <!-- Zaglavlje sa naslovom i X dugmetom u istoj liniji -->
     <div class="modal-header">
       <h2 class="modal-title">{{ title }}</h2>
       <button class="close-btn" (click)="onClose()">✕</button>
     </div>
 
-    <!-- Sadržaj forme se ubacuje ovde -->
     <div class="modal-body">
       <ng-content></ng-content>
     </div>

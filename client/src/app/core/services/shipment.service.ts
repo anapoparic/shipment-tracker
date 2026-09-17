@@ -14,7 +14,7 @@ import { PaginatedResponse } from '../models/utils.model';
   providedIn: 'root',
 })
 export class ShipmentService {
-  private apiUrl = 'http://localhost:3000/api/shipments';
+  private apiUrl = '/api/shipments';
 
   constructor(private http: HttpClient) {}
 

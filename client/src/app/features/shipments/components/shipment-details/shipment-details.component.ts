@@ -6,10 +6,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  ShipmentWithDetails,
-  ShipmentStatus,
-} from '../../../../core/models/shipment.model';
+import { ShipmentWithDetails } from '../../../../core/models/shipment.model';
 import { ShipmentEvent } from '../../../../core/models/event.model';
 import { ShipmentService } from '../../../../core/services/shipment.service';
 import {
@@ -42,7 +39,6 @@ export class ShipmentDetailsComponent {
 
   constructor(private shipmentService: ShipmentService) {}
 
-  // Kada se promeni pošiljka sa desne/leve strane, povuci sve detalje sa servera
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['shipment'] && this.shipment?.id) {
       this.loadFullDetails(this.shipment.id);

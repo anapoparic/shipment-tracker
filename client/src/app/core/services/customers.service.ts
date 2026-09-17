@@ -8,7 +8,7 @@ import { CustomerDropdownDto } from '../models/customer.model';
   providedIn: 'root',
 })
 export class CustomerService {
-  private apiUrl = 'http://localhost:3000/api/customers';
+  private apiUrl = '/api/customers';
 
   constructor(private http: HttpClient) {}
 

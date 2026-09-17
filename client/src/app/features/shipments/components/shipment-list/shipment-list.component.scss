@@ -203,13 +203,10 @@
   }
 }
 
-/* --- Dodatak za prilagođeni dropdown (Select) --- */
-
 .select-wrapper {
   position: relative;
   display: inline-block;
 
-  /* Mala custom strelica kao pozadina */
   &::after {
     content: "▼";
     font-size: 10px;
@@ -232,7 +229,7 @@
   color: var(--text-main);
   font-size: 14px;
   transition: border-color 0.2s;
-  appearance: none; /* Uklanja fabričku strelicu */
+  appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
 

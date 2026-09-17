@@ -1,6 +1,6 @@
 <div class="drawer-backdrop" (click)="close()">
   <div class="drawer-content" (click)="$event.stopPropagation()">
-    <!-- Zaglavlje panela -->
+    <!-- Panel header -->
     <div class="drawer-header">
       <div class="header-top">
         <div class="title-group">
@@ -17,7 +17,7 @@
       <p class="customer-subtitle">{{ shipment.customer_name }}</p>
     </div>
 
-    <!-- Navigacija tabovima -->
+    <!-- Tabs navigation -->
     <div class="tabs-nav">
       <button
         class="tab-btn"
@@ -35,7 +35,7 @@
       </button>
     </div>
 
-    <!-- SADRŽAJ TAB-A: DETAILS -->
+    <!-- Content for Details tab -->
     <div class="drawer-body" *ngIf="activeTab === 'details'">
       <div class="section-title">CUSTOMER</div>
       <div class="info-grid">
@@ -105,7 +105,7 @@
       </div>
     </div>
 
-    <!-- SADRŽAJ TAB-A: TIMELINE -->
+    <!-- Content for Timeline tab -->
     <div class="drawer-body timeline-body" *ngIf="activeTab === 'timeline'">
       <div class="timeline-actions">
         <button class="add-event-btn" (click)="openAddEventModal()">
@@ -149,7 +149,7 @@
       </div>
     </div>
 
-    <!-- Podnožje sa ID-jevima -->
+    <!-- Footer with IDs -->
     <div class="drawer-footer">
       <span>ID: {{ shipment.id }}</span>
       <span>Customer ID: {{ shipment.customer_id }}</span>
