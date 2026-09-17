@@ -1,13 +1,10 @@
-import {
-  ShipmentWithDetails,
-  PaginatedResponse,
-  ShipmentFilterQuery,
-} from "./shipments.types";
+import { ShipmentRow, ParsedShipmentFilters } from "./shipments.types";
+import { PaginatedResponse } from "../../utils/types";
 
 export function mapShipmentPaginatedResult(
-  rows: (ShipmentWithDetails & { total_count?: string | number })[],
-  filters: ShipmentFilterQuery = {},
-): PaginatedResponse<ShipmentWithDetails> {
+  rows: (ShipmentRow & { total_count?: string | number })[],
+  filters: ParsedShipmentFilters = {},
+): PaginatedResponse<ShipmentRow> {
   const page = filters.page || 1;
   const limit = filters.limit || 10;
 
