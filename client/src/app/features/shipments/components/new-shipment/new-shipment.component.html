@@ -1,0 +1,70 @@
+<app-modal title="New shipment" (close)="onClose()">
+  <form [formGroup]="shipmentForm" (ngSubmit)="onSubmit()">
+    <!-- Customer Search Dropdown -->
+    <div class="form-group dropdown-container">
+      <div
+        class="dropdown-backdrop"
+        *ngIf="isDropdownOpen"
+        (click)="isDropdownOpen = false"
+      ></div>
+
+      <label>Customer *</label>
+      <input
+        type="text"
+        [formControl]="searchControl"
+        (focus)="isDropdownOpen = true"
+        placeholder="Search or select customer..."
+        class="form-control"
+        autocomplete="off"
+      />
+
+      <!-- Dropdown menu -->
+      <ul *ngIf="isDropdownOpen && customers.length > 0" class="dropdown-list">
+        <li
+          *ngFor="let customer of customers"
+          (click)="selectCustomer(customer)"
+        >
+          {{ customer.name }}
+        </li>
+      </ul>
+
+      <div
+        *ngIf="isDropdownOpen && customers.length === 0"
+        class="dropdown-list empty"
+      >
+        No customers found.
+      </div>
+    </div>
+
+    <!-- Destination Address -->
+    <div class="form-group">
+      <label>Destination address *</label>
+      <input
+        type="text"
+        formControlName="destination_address"
+        placeholder="npr. Bulevar Oslobođenja 45, 21000 Novi Sad"
+        class="form-control"
+      />
+    </div>
+
+    <!-- Promised Delivery Date -->
+    <div class="form-group">
+      <label>Promised delivery date *</label>
+      <input
+        type="datetime-local"
+        formControlName="promised_delivery_date"
+        class="form-control"
+      />
+    </div>
+
+    <!-- Footer Buttons -->
+    <div class="modal-footer">
+      <button type="button" class="btn-cancel" (click)="onClose()">
+        Cancel
+      </button>
+      <button type="submit" class="btn-save" [disabled]="shipmentForm.invalid">
+        Create shipment
+      </button>
+    </div>
+  </form>
+</app-modal>

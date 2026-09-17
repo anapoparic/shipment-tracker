@@ -1,6 +1,6 @@
-import { ShipmentFilterQuery } from "./shipments.types";
+import { ParsedShipmentFilters } from "./shipments.types";
 
-export function buildShipmentQuery(filters: ShipmentFilterQuery = {}) {
+export function buildShipmentQuery(filters: ParsedShipmentFilters = {}) {
   const {
     status,
     customer_id,
@@ -35,7 +35,7 @@ export function buildShipmentQuery(filters: ShipmentFilterQuery = {}) {
 
   if (is_late_only) {
     conditions.push(
-      `s.current_status NOT IN ('DELIVERED', 'CANCELLED') AND NOW() > s.promised_delivery_date`,
+      `s.current_status NOT IN ('DELIVERED', 'CANCELLED') AND NOW() > (s.promised_delivery_date + INTERVAL '1 minute')`,
     );
   }
 
@@ -53,11 +53,14 @@ export function buildShipmentQuery(filters: ShipmentFilterQuery = {}) {
 
   const sql = `
     SELECT 
-      s.id, s.tracking_number, s.customer_id, s.destination_address, s.current_status, s.promised_delivery_date, s.created_at, s.updated_at,
-      c.name AS customer_name, c.email AS customer_email, c.phone AS customer_phone,
-      (s.current_status NOT IN ('DELIVERED', 'CANCELLED') AND NOW() > s.promised_delivery_date) AS is_late,
+      s.id, 
+      s.tracking_number, 
+      s.current_status, 
+      s.promised_delivery_date,
+      c.name AS customer_name,
+      (s.current_status NOT IN ('DELIVERED', 'CANCELLED') AND NOW() > (s.promised_delivery_date + INTERVAL '1 minute')) AS is_late,
       CASE 
-        WHEN NOW() > s.promised_delivery_date THEN ROUND(EXTRACT(EPOCH FROM (NOW() - s.promised_delivery_date)) / 3600)
+        WHEN NOW() > s.promised_delivery_date THEN FLOOR(EXTRACT(EPOCH FROM (NOW() - s.promised_delivery_date)) / 60)
         ELSE 0 
       END AS delay_in_hours,
       COUNT(*) OVER() AS total_count
