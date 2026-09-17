@@ -9,7 +9,7 @@ export interface ShipmentEvent {
 }
 
 export interface CreateShipmentEventDto {
-  shipment_id: number | string;
+  shipment_id: number;
   event_type: string;
   location: string;
   description?: string;
