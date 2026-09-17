@@ -26,7 +26,7 @@ export class ShipmentService {
     if (query) {
       if (query.status) params = params.set('status', query.status);
       if (query.customer_id)
-        params = params.set('customerId', query.customer_id.toString());
+        params = params.set('customer_id', query.customer_id.toString());
       if (query.is_late_only)
         params = params.set('is_late_only', query.is_late_only.toString());
       if (query.search) params = params.set('search', query.search);
